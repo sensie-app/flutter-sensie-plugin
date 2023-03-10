@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'sensie.dart';
 import 'types.dart';
+import 'calibration_session.dart';
 
 const String SENSIES = 'sensies';
 
@@ -13,13 +14,13 @@ class PluginSensie {
   static const MethodChannel _channel = const MethodChannel('plugin_sensie');
 
   static late String accessToken;
-  late bool canRecalibrate;
-  late Function(Object) onEnds;
+  static late bool canRecalibrate;
+  static late Function(Object) onEnds;
   static late bool canEvaluate;
-  late SensorData sensorData;
-  late String userId;
-  late String sessionId;
-  late bool isConnecting;
+  static late SensorData sensorData;
+  static late String userId;
+  static late String sessionId;
+  static late bool isConnecting;
 
   PluginSensie({required String initAccessToken}) {
     accessToken = initAccessToken;
@@ -87,6 +88,25 @@ Future<Map<String, dynamic>> connect() async {
     };
   } else {
     return Future.error('Connection failed : Empty accessToken');
+  }
+}
+
+Future<CalibrationSession> startCalibrationSession(
+    CalibrationInput calibrationInput) async {
+  try {
+    if (!PluginSensie.canRecalibrate) {
+      throw Exception("Can't recalibrate sensie. Please check async storage.");
+    }
+
+    PluginSensie.userId = calibrationInput.userId;
+    PluginSensie.onEnds = calibrationInput.onEnds;
+    final resJSON = await startSessionRequest('calibration');
+    final sessionId = resJSON.data.session.id;
+    PluginSensie.sessionId = sessionId;
+    return CalibrationSession(PluginSensie.accessToken, sessionId);
+  } catch (e) {
+    print(e);
+    throw Exception('Failed to start calibration session.');
   }
 }
 
