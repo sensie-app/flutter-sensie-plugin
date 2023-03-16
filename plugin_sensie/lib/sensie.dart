@@ -31,24 +31,23 @@ class SensieInfo {
 }
 
 class Sensie {
-  String id;
-  int whips;
-  int flowing;
-  List<int> signal;
-  int agreement;
-  SensorData sensorData;
-  SessionInfo sessionInfo;
+  late String id;
+  late int whips;
+  late int flowing;
+  late List<int> signal;
+  late int agreement;
+  late SensorData sensorData;
+  late SessionInfo sessionInfo;
 
-  Sensie({
-    required SensieInfo sensieInfo,
-    required SessionInfo sessionInfo,
-  })  : id = 'Sensie id will be availabe after the agreement',
-        whips = sensieInfo.whips,
-        flowing = sensieInfo.flowing,
-        signal = sensieInfo.signal,
-        agreement = 0,
-        sensorData = sensieInfo.sensorData,
-        sessionInfo = sessionInfo;
+  Sensie({required SensieInfo sensieInfo, required SessionInfo sessionInfo}) {
+    id = 'Sensie id will be availabe after the agreement';
+    whips = sensieInfo.whips;
+    flowing = sensieInfo.flowing;
+    signal = sensieInfo.signal;
+    agreement = 0;
+    sensorData = sensieInfo.sensorData;
+    sessionInfo = sessionInfo;
+  }
 
   Future<Map<String, dynamic>> storeSensieRequest(
       int whipCount, int flowing, int agreement) async {
