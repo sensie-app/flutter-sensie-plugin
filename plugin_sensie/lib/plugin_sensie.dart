@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'sensie.dart';
 import 'types.dart';
 import 'calibration_session.dart';
+import 'package:http/http.dart' as http;
 
 const String SENSIES = 'sensies';
 
@@ -91,6 +92,30 @@ Future<Map<String, dynamic>> connect() async {
   }
 }
 
+Future<dynamic> startSessionRequest(String type) async {
+  const String path = '/session';
+  const String baseUrl = 'BASE_URL';
+
+  final Map<String, dynamic> body = {
+    'userId': PluginSensie.userId,
+    'type': type
+  };
+
+  final Map<String, String> headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'X-api-key': PluginSensie.accessToken,
+  };
+
+  final response = await http.post(
+    Uri.parse(baseUrl + path),
+    body: json.encode(body),
+    headers: headers,
+  );
+
+  return json.decode(response.body);
+}
+
 Future<CalibrationSession> startCalibrationSession(
     CalibrationInput calibrationInput) async {
   try {
@@ -108,6 +133,73 @@ Future<CalibrationSession> startCalibrationSession(
     print(e);
     throw Exception('Failed to start calibration session.');
   }
+}
+
+Future<dynamic> captureSensie(
+    CaptureEvaluateSensieInput captureSensieInput) async {
+  if (captureSensieInput.userId != PluginSensie.userId) {
+    return {'message': 'User id is not valid.'};
+  }
+
+  final Map<String, dynamic> sensors =
+      startSensors(captureSensieInput.onSensorData);
+  final dynamic subGyro = sensors['subGyro'];
+  final dynamic subAcc = sensors['subAcc'];
+
+  final completer = Completer();
+
+  Timer(Duration(milliseconds: 3000), () async {
+    stopSensors(subGyro, subAcc);
+    roundSensorData();
+
+    final dynamic whipData = await whipCounter!();
+    final int whipCount = whipData['whipCount'];
+    final List<double> avgFlatCrest = whipData['avgFlatCrest'];
+
+    if (whipCount == 3) {
+      final dynamic sensiesData = await getDataFromAsyncStorage!(SENSIES);
+      final dynamic sensie = {
+        'whipCount': whipCount,
+        'signal': avgFlatCrest,
+        'sensorData': {}, // Replace with the appropriate sensorData
+      };
+      final dynamic evaluation = await evaluateSensie!(sensie, sensiesData);
+      final int flowing = evaluation['flowing'];
+
+      // Replace Sensie with the appropriate Dart class.
+      final retSensie = Sensie(
+        sensieInfo: SensieInfo(
+          whips: whipCount,
+          flowing: flowing,
+          signal: avgFlatCrest,
+          sensorData: {}, // Replace with the appropriate sensorData
+        ),
+        sessionInfo: SessionInfo(
+          sessionId: PluginSensie.sessionId,
+          accessToken: PluginSensie.accessToken,
+        ),
+      );
+
+      final dynamic calibrationStrength = await signalStrength!(sensiesData);
+      if (onEnds != null) {
+        onEnds({'calibration_strength': calibrationStrength});
+      }
+
+      resetSensorData!();
+
+      completer.complete(retSensie);
+    } else {
+      resetSensorData!();
+
+      completer.complete({
+        'id': 'Invalid sensie',
+        'whips': whipCount,
+        'flowing': null,
+      });
+    }
+  });
+
+  return completer.future;
 }
 
 class SensorData {
