@@ -1,3 +1,5 @@
+import 'types.dart';
+
 class CalibrationSession {
   String id;
   Map<String, dynamic> currentSensie;
@@ -16,22 +18,4 @@ class CalibrationSession {
           [],
         ),
         canCaptureSensie = true;
-}
-
-class SensorData {
-  List<double> gyroX;
-  List<double> gyroY;
-  List<double> gyroZ;
-  List<double> accelX;
-  List<double> accelY;
-  List<double> accelZ;
-
-  SensorData(
-    this.gyroX,
-    this.gyroY,
-    this.gyroZ,
-    this.accelX,
-    this.accelY,
-    this.accelZ,
-  );
 }

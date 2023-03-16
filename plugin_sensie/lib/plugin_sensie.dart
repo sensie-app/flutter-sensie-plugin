@@ -8,6 +8,7 @@ import 'sensie.dart';
 import 'types.dart';
 import 'calibration_session.dart';
 import 'package:http/http.dart' as http;
+import 'package:sensors/sensors.dart';
 
 const String SENSIES = 'sensies';
 
@@ -135,6 +136,79 @@ Future<CalibrationSession> startCalibrationSession(
   }
 }
 
+Map<String, StreamSubscription> startSensors({Function(SensorData)? callback}) {
+  StreamSubscription<GyroscopeEvent>? gyroSubscription;
+  StreamSubscription<AccelerometerEvent>? accelSubscription;
+
+  SensorData sensorData = SensorData(
+    gyroX: [],
+    gyroY: [],
+    gyroZ: [],
+    accelX: [],
+    accelY: [],
+    accelZ: [],
+  );
+
+  gyroSubscription = gyroscopeEvents.listen((GyroscopeEvent event) {
+    sensorData.gyroX.add(event.x);
+    sensorData.gyroY.add(event.y);
+    sensorData.gyroZ.add(event.z);
+    if (callback != null) callback(sensorData);
+  });
+
+  accelSubscription = accelerometerEvents.listen((AccelerometerEvent event) {
+    sensorData.accelX.add(event.x);
+    sensorData.accelY.add(event.y);
+    sensorData.accelZ.add(event.z);
+    if (callback != null) callback(sensorData);
+  });
+
+  return {
+    'gyroSubscription': gyroSubscription,
+    'accelSubscription': accelSubscription
+  };
+}
+
+void stopSensors({
+  required StreamSubscription gyroSubscription,
+  required StreamSubscription accelSubscription,
+}) {
+  gyroSubscription.cancel();
+  accelSubscription.cancel();
+}
+
+void roundSensorData() {
+  PluginSensie.sensorData.gyroX = PluginSensie.sensorData.gyroX
+      .map((x) => (x * 100).round() / 100)
+      .toList();
+  PluginSensie.sensorData.gyroY = PluginSensie.sensorData.gyroY
+      .map((x) => (x * 100).round() / 100)
+      .toList();
+  PluginSensie.sensorData.gyroZ = PluginSensie.sensorData.gyroZ
+      .map((x) => (x * 100).round() / 100)
+      .toList();
+  PluginSensie.sensorData.accelX = PluginSensie.sensorData.accelX
+      .map((x) => (x * 100).round() / 100)
+      .toList();
+  PluginSensie.sensorData.accelY = PluginSensie.sensorData.accelY
+      .map((x) => (x * 100).round() / 100)
+      .toList();
+  PluginSensie.sensorData.accelZ = PluginSensie.sensorData.accelZ
+      .map((x) => (x * 100).round() / 100)
+      .toList();
+}
+
+resetSensorData() {
+  PluginSensie.sensorData = SensorData(
+    gyroX: [],
+    gyroY: [],
+    gyroZ: [],
+    accelX: [],
+    accelY: [],
+    accelZ: [],
+  );
+}
+
 Future<dynamic> captureSensie(
     CaptureEvaluateSensieInput captureSensieInput) async {
   if (captureSensieInput.userId != PluginSensie.userId) {
@@ -142,14 +216,14 @@ Future<dynamic> captureSensie(
   }
 
   final Map<String, dynamic> sensors =
-      startSensors(captureSensieInput.onSensorData);
-  final dynamic subGyro = sensors['subGyro'];
-  final dynamic subAcc = sensors['subAcc'];
+      startSensors(callback: captureSensieInput.onSensorData);
+  final StreamSubscription subGyro = sensors['subGyro'];
+  final StreamSubscription subAcc = sensors['subAcc'];
 
   final completer = Completer();
 
   Timer(Duration(milliseconds: 3000), () async {
-    stopSensors(subGyro, subAcc);
+    stopSensors(gyroSubscription: subGyro, accelSubscription: subAcc);
     roundSensorData();
 
     final dynamic whipData = await whipCounter!();
@@ -157,7 +231,7 @@ Future<dynamic> captureSensie(
     final List<double> avgFlatCrest = whipData['avgFlatCrest'];
 
     if (whipCount == 3) {
-      final dynamic sensiesData = await getDataFromAsyncStorage!(SENSIES);
+      final dynamic sensiesData = await getDataFromAsyncStorage(SENSIES);
       final dynamic sensie = {
         'whipCount': whipCount,
         'signal': avgFlatCrest,
@@ -172,7 +246,14 @@ Future<dynamic> captureSensie(
           whips: whipCount,
           flowing: flowing,
           signal: avgFlatCrest,
-          sensorData: {}, // Replace with the appropriate sensorData
+          sensorData: SensorData(
+            gyroX: [],
+            gyroY: [],
+            gyroZ: [],
+            accelX: [],
+            accelY: [],
+            accelZ: [],
+          ), // Replace with the appropriate sensorData
         ),
         sessionInfo: SessionInfo(
           sessionId: PluginSensie.sessionId,
@@ -181,15 +262,15 @@ Future<dynamic> captureSensie(
       );
 
       final dynamic calibrationStrength = await signalStrength!(sensiesData);
-      if (onEnds != null) {
-        onEnds({'calibration_strength': calibrationStrength});
+      if (PluginSensie.onEnds != null) {
+        PluginSensie.onEnds({'calibration_strength': calibrationStrength});
       }
 
-      resetSensorData!();
+      resetSensorData();
 
       completer.complete(retSensie);
     } else {
-      resetSensorData!();
+      resetSensorData();
 
       completer.complete({
         'id': 'Invalid sensie',
@@ -200,22 +281,4 @@ Future<dynamic> captureSensie(
   });
 
   return completer.future;
-}
-
-class SensorData {
-  List<double> gyroX;
-  List<double> gyroY;
-  List<double> gyroZ;
-  List<double> accelX;
-  List<double> accelY;
-  List<double> accelZ;
-
-  SensorData({
-    required this.gyroX,
-    required this.gyroY,
-    required this.gyroZ,
-    required this.accelX,
-    required this.accelY,
-    required this.accelZ,
-  });
 }

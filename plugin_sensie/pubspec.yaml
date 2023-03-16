@@ -13,6 +13,7 @@ dependencies:
   http: ^0.13.5
   plugin_platform_interface: ^2.0.2
   shared_preferences: ^2.0.11
+  sensors: ^2.0.0
 
 dev_dependencies:
   flutter_test:
