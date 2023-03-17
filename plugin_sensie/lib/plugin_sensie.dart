@@ -117,7 +117,7 @@ Future<dynamic> startSessionRequest(String type) async {
   return json.decode(response.body);
 }
 
-Future<CalibrationSession> startCalibrationSession(
+Future<CalibrationSession> startCalibration(
     CalibrationInput calibrationInput) async {
   try {
     if (!PluginSensie.canRecalibrate) {
