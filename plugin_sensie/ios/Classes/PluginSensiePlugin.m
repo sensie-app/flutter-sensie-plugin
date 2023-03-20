@@ -1,9 +1,11 @@
 #import "PluginSensiePlugin.h"
 #import "FLRSynth.h"
+#import <SensieFramework/SensieFramework-Swift.h>
 
 @implementation PluginSensiePlugin{
   int _numKeysDown;
   FLRSynthRef _synth;
+    Wrapper *instance = [[Wrapper alloc] init];
 }
 
 - (instancetype)init {
@@ -41,6 +43,8 @@
     
     _numKeysDown -= 1;
     result(@(_numKeysDown));
+  } else if ([@"whipCounter" isEqualToString:call.method]) {
+      NSNumber *result = [instance callGlobalWhipCounterWithParam: ];
   } else {
     result(FlutterMethodNotImplemented);
   }
