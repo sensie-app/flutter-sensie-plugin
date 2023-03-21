@@ -2,7 +2,8 @@ import 'package:flutter/services.dart';
 // import 'plugin_sensie_platform_interface.dart';
 
 class PluginSensie {
-  static const MethodChannel _channel = const MethodChannel('plugin_sensie');
+  static const MethodChannel _channel =
+      MethodChannel("com.sensie.plugin_sensie/swift_function");
 
   static Future<int> whipCounter(List<double> yaw) async {
     final Map<String, dynamic> args = <String, dynamic>{
@@ -12,11 +13,11 @@ class PluginSensie {
     return result;
   }
 
-  static Future<double> signalStrength(List<Object> sensies) async {
+  static Future<int> signalStrength(List<Object> sensies) async {
     final Map<String, dynamic> args = <String, dynamic>{
       'sensies': sensies,
     };
-    final double result = await _channel.invokeMethod('signalStrength', args);
+    final int result = await _channel.invokeMethod('signalStrength', args);
     return result;
   }
 

@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:plugin_sensie/plugin_sensie.dart';
 import 'types.dart';
 import 'package:sensors/sensors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'sensie.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class CalibrationSession {
   late String id;
@@ -113,6 +115,39 @@ class CalibrationSession {
     );
   }
 
+  Future<Map<String, dynamic>> storeSensieRequest({
+    required int whipCount,
+    required bool flow,
+  }) async {
+    final path = '/session/$id/sensie';
+
+    final body = {
+      'accelerometerX': sensorData.accelX,
+      'accelerometerY': sensorData.accelY,
+      'accelerometerZ': sensorData.accelZ,
+      'gyroscopeX': sensorData.gyroX,
+      'gyroscopeY': sensorData.gyroY,
+      'gyroscopeZ': sensorData.gyroZ,
+      'whips': whipCount,
+      'flowing': flow ? 1 : -1,
+      'agreement': 1,
+    };
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'X-api-key': accessToken,
+    };
+
+    final response = await http.post(
+      Uri.parse(BASE_URL + path),
+      body: json.encode(body),
+      headers: headers,
+    );
+
+    return json.decode(response.body) as Map<String, dynamic>;
+  }
+
   Future<Map<String, dynamic>> captureSensie(
       CaptureSensieInput captureSensieInput) async {
     if (!canCaptureSensie) {
@@ -131,8 +166,7 @@ class CalibrationSession {
       );
       roundSensorData();
 
-      // Implement whipCounter function and replace the dummy values
-      int whipCount = 3; // Dummy value
+      int whipCount = await PluginSensie.whipCounter(sensorData.gyroZ);
       List<int> avgFlatCrest = [0]; // Dummy value
 
       currentSensie = {
@@ -146,8 +180,9 @@ class CalibrationSession {
 
       if (whipCount == 3) await addSensie(sensie: currentSensie);
       if (whipCount != 0) {
-        // Implement storeSensieRequest function and replace the dummy values
-        String sensieId = 'sample_sensie_id'; // Dummy value
+        final resJson = await storeSensieRequest(
+            whipCount: whipCount, flow: captureSensieInput.flow);
+        final sensieId = resJson['data']['sensie']['id'];
 
         Map<String, dynamic> retSensie = {
           'id': sensieId,

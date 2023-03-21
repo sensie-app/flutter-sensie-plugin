@@ -12,7 +12,7 @@ import 'plugin_sensie.dart';
 class SensieEngine {
   late String accessToken;
   late bool canRecalibrate;
-  late Function(Object) onEnds;
+  late Function(Object)? onEnds;
   late bool canEvaluate;
   late SensorData sensorData;
   late String userId;
@@ -52,10 +52,10 @@ class SensieEngine {
   }
 
   Future<bool> checkCanEvaluate() async {
-    List<dynamic> sensies = await getDataFromAsyncStorage(SENSIES);
+    List<dynamic>? sensies = await getDataFromAsyncStorage(SENSIES);
     int flow = 0, block = 0;
     if (sensies == null) {
-      this.canEvaluate = false;
+      canEvaluate = false;
       return false;
     }
     for (int i = 0; i < sensies.length; i++) {
@@ -66,15 +66,15 @@ class SensieEngine {
       }
     }
     if (flow >= 3 && block >= 3) {
-      this.canEvaluate = true;
+      canEvaluate = true;
       return true;
     }
-    this.canEvaluate = false;
+    canEvaluate = false;
     return false;
   }
 
   Future<Map<String, dynamic>> connect() async {
-    if (this.accessToken.isNotEmpty) {
+    if (accessToken.isNotEmpty) {
       bool canRecalibrate = await checkCanRecalibrate();
       bool canEvaluate = await checkCanEvaluate();
 
@@ -96,7 +96,7 @@ class SensieEngine {
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'X-api-key': this.accessToken,
+      'X-api-key': accessToken,
     };
 
     final response = await http.post(
@@ -111,19 +111,18 @@ class SensieEngine {
   Future<CalibrationSession> startCalibration(
       CalibrationInput calibrationInput) async {
     try {
-      if (!this.canRecalibrate) {
+      if (!canRecalibrate) {
         throw Exception(
             "Can't recalibrate sensie. Please check async storage.");
       }
 
-      this.userId = calibrationInput.userId;
-      this.onEnds = calibrationInput.onEnds;
+      userId = calibrationInput.userId;
+      onEnds = calibrationInput.onEnds;
       final resJSON = await startSessionRequest('calibration');
       final sessionId = resJSON.data.session.id;
       this.sessionId = sessionId;
-      return CalibrationSession(this.accessToken, sessionId);
+      return CalibrationSession(accessToken, sessionId);
     } catch (e) {
-      print(e);
       throw Exception('Failed to start calibration session.');
     }
   }
@@ -171,22 +170,22 @@ class SensieEngine {
   }
 
   void roundSensorData() {
-    this.sensorData.gyroX =
-        this.sensorData.gyroX.map((x) => (x * 100).round() / 100).toList();
-    this.sensorData.gyroY =
-        this.sensorData.gyroY.map((x) => (x * 100).round() / 100).toList();
-    this.sensorData.gyroZ =
-        this.sensorData.gyroZ.map((x) => (x * 100).round() / 100).toList();
-    this.sensorData.accelX =
-        this.sensorData.accelX.map((x) => (x * 100).round() / 100).toList();
-    this.sensorData.accelY =
-        this.sensorData.accelY.map((x) => (x * 100).round() / 100).toList();
-    this.sensorData.accelZ =
-        this.sensorData.accelZ.map((x) => (x * 100).round() / 100).toList();
+    sensorData.gyroX =
+        sensorData.gyroX.map((x) => (x * 100).round() / 100).toList();
+    sensorData.gyroY =
+        sensorData.gyroY.map((x) => (x * 100).round() / 100).toList();
+    sensorData.gyroZ =
+        sensorData.gyroZ.map((x) => (x * 100).round() / 100).toList();
+    sensorData.accelX =
+        sensorData.accelX.map((x) => (x * 100).round() / 100).toList();
+    sensorData.accelY =
+        sensorData.accelY.map((x) => (x * 100).round() / 100).toList();
+    sensorData.accelZ =
+        sensorData.accelZ.map((x) => (x * 100).round() / 100).toList();
   }
 
   resetSensorData() {
-    this.sensorData = SensorData(
+    sensorData = SensorData(
       gyroX: [],
       gyroY: [],
       gyroZ: [],
@@ -198,7 +197,7 @@ class SensieEngine {
 
   Future<dynamic> captureSensie(
       CaptureEvaluateSensieInput captureSensieInput) async {
-    if (captureSensieInput.userId != this.userId) {
+    if (captureSensieInput.userId != userId) {
       return {'message': 'User id is not valid.'};
     }
 
@@ -213,7 +212,7 @@ class SensieEngine {
       stopSensors(gyroSubscription: subGyro, accelSubscription: subAcc);
       roundSensorData();
 
-      final dynamic whipData = await whipCounter!();
+      final dynamic whipData = await PluginSensie.whipCounter(sensorData.gyroZ);
       final int whipCount = whipData['whipCount'];
       final List<double> avgFlatCrest = whipData['avgFlatCrest'];
 
@@ -222,12 +221,12 @@ class SensieEngine {
         final dynamic sensie = {
           'whipCount': whipCount,
           'signal': avgFlatCrest,
-          'sensorData': {}, // Replace with the appropriate sensorData
+          'sensorData': sensorData,
         };
-        final dynamic evaluation = await evaluateSensie!(sensie, sensiesData);
+        final dynamic evaluation =
+            await PluginSensie.evaluateSensie(sensie, sensiesData);
         final int flowing = evaluation['flowing'];
 
-        // Replace Sensie with the appropriate Dart class.
         final retSensie = Sensie(
           sensieInfo: SensieInfo(
             whips: whipCount,
@@ -240,17 +239,18 @@ class SensieEngine {
               accelX: [],
               accelY: [],
               accelZ: [],
-            ), // Replace with the appropriate sensorData
+            ),
           ),
           sessionInfo: SessionInfo(
-            sessionId: this.sessionId,
-            accessToken: this.accessToken,
+            sessionId: sessionId,
+            accessToken: accessToken,
           ),
         );
 
-        final dynamic calibrationStrength = await signalStrength!(sensiesData);
-        if (this.onEnds != null) {
-          this.onEnds({'calibration_strength': calibrationStrength});
+        final dynamic calibrationStrength =
+            await PluginSensie.signalStrength(sensiesData);
+        if (onEnds != null) {
+          onEnds!({'calibration_strength': calibrationStrength});
         }
 
         resetSensorData();

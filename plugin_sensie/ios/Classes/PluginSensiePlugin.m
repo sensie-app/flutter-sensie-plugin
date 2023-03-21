@@ -5,7 +5,6 @@
 @implementation PluginSensiePlugin{
   int _numKeysDown;
   FLRSynthRef _synth;
-    Wrapper *instance = [[Wrapper alloc] init];
 }
 
 - (instancetype)init {
@@ -39,12 +38,9 @@
     _numKeysDown += 1;
     result(@(_numKeysDown));
   } else if ([@"onKeyUp" isEqualToString:call.method]) {
-    FLRSynthKeyUp(_synth, [call.arguments[0] intValue]);
-    
+    FLRSynthKeyUp(_synth, [call.arguments[0] intValue]);  
     _numKeysDown -= 1;
     result(@(_numKeysDown));
-  } else if ([@"whipCounter" isEqualToString:call.method]) {
-      NSNumber *result = [instance callGlobalWhipCounterWithParam: ];
   } else {
     result(FlutterMethodNotImplemented);
   }
