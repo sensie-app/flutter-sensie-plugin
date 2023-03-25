@@ -15,7 +15,7 @@ class CalibrationSession {
   late bool canCaptureSensie;
   late String accessToken;
 
-  CalibrationSession(String accessToken, String sessionId) {
+  CalibrationSession(this.accessToken, String sessionId) {
     id = sessionId;
     currentSensie = {};
     sensorData = SensorData(
@@ -27,7 +27,6 @@ class CalibrationSession {
       accelZ: [],
     );
     canCaptureSensie = false;
-    accessToken = accessToken;
   }
 
   Map<String, StreamSubscription> startSensors(
@@ -159,15 +158,17 @@ class CalibrationSession {
 
     Completer<Map<String, dynamic>> completer = Completer();
 
-    Timer(Duration(milliseconds: 3000), () async {
+    Timer(const Duration(milliseconds: 3000), () async {
       stopSensors(
         sensorsSubscriptions['gyroSubscription']!,
         sensorsSubscriptions['accelSubscription']!,
       );
       roundSensorData();
 
-      int whipCount = await PluginSensie.whipCounter(sensorData.gyroZ);
-      List<int> avgFlatCrest = [0]; // Dummy value
+      Map<String, dynamic> whipCounterRes =
+          await PluginSensie.whipCounter(sensorData.gyroZ);
+      int whipCount = whipCounterRes['whipCount'];
+      List<double> avgFlatCrest = whipCounterRes['avgFlatCrest'];
 
       currentSensie = {
         'whipCount': whipCount,

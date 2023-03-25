@@ -58,7 +58,7 @@ class CaptureEvaluateSensieInput {
 }
 
 enum Agreement {
-  Agree,
-  Disagree,
-  AgreeAfterReflecting,
+  agree,
+  disagree,
+  agreeAfterReflecting,
 }

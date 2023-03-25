@@ -5,11 +5,12 @@ class PluginSensie {
   static const MethodChannel _channel =
       MethodChannel("com.sensie.plugin_sensie/swift_function");
 
-  static Future<int> whipCounter(List<double> yaw) async {
+  static Future<Map<String, dynamic>> whipCounter(List<double> yaw) async {
     final Map<String, dynamic> args = <String, dynamic>{
       'yaw': yaw,
     };
-    final int result = await _channel.invokeMethod('whipCounter', args);
+    final Map<String, dynamic> result =
+        await _channel.invokeMethod('whipCounter', args);
     return result;
   }
 

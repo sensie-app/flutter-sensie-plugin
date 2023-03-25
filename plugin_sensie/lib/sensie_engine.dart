@@ -91,7 +91,7 @@ class SensieEngine {
     const String path = '/session';
     const String baseUrl = 'BASE_URL';
 
-    final Map<String, dynamic> body = {'userId': this.userId, 'type': type};
+    final Map<String, dynamic> body = {'userId': userId, 'type': type};
 
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -208,7 +208,7 @@ class SensieEngine {
 
     final completer = Completer();
 
-    Timer(Duration(milliseconds: 3000), () async {
+    Timer(const Duration(milliseconds: 3000), () async {
       stopSensors(gyroSubscription: subGyro, accelSubscription: subAcc);
       roundSensorData();
 
