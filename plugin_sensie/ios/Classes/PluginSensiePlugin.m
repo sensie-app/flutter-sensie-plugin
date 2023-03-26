@@ -1,5 +1,6 @@
 #import "PluginSensiePlugin.h"
 #import "FLRSynth.h"
+#import <SensieFramework/SensieFramework-Swift.h>
 
 @implementation PluginSensiePlugin{
   int _numKeysDown;
@@ -37,8 +38,7 @@
     _numKeysDown += 1;
     result(@(_numKeysDown));
   } else if ([@"onKeyUp" isEqualToString:call.method]) {
-    FLRSynthKeyUp(_synth, [call.arguments[0] intValue]);
-    
+    FLRSynthKeyUp(_synth, [call.arguments[0] intValue]);  
     _numKeysDown -= 1;
     result(@(_numKeysDown));
   } else {

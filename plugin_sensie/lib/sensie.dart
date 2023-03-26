@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'types.dart';
@@ -94,7 +94,9 @@ class Sensie {
         sensies != null ? [...sensies, sensie] : [sensie],
       );
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -106,18 +108,19 @@ class Sensie {
 
   Future<void> setAgreement(int agreement) async {
     this.agreement = agreement;
-    if (this.agreement == Agreement.Agree) {
+    if (agreement == Agreement.agree.index) {
       await addSensie({
-        'whipCount': this.whips,
-        'signal': this.signal,
-        'sensorData': this.sensorData,
-        'flow': this.flowing,
+        'whipCount': whips,
+        'signal': signal,
+        'sensorData': sensorData,
+        'flow': flowing,
       });
     }
     final resJSON = await storeSensieRequest(
-      this.whips,
-      this.flowing,
-      this.agreement,
+      whips,
+      flowing,
+      agreement,
     );
+    id = resJSON['data']['sensie']['id'];
   }
 }
