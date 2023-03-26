@@ -14,7 +14,7 @@ class PluginSensie {
     return result;
   }
 
-  static Future<int> signalStrength(List<Object> sensies) async {
+  static Future<int> signalStrength(List<Map<String, dynamic>> sensies) async {
     final Map<String, dynamic> args = <String, dynamic>{
       'sensies': sensies,
     };
@@ -22,7 +22,8 @@ class PluginSensie {
     return result;
   }
 
-  static Future<int> evaluateSensie(Object sensie, List<Object> sensies) async {
+  static Future<int> evaluateSensie(
+      Map<String, dynamic> sensie, List<Map<String, dynamic>> sensies) async {
     final Map<String, dynamic> args = <String, dynamic>{
       'sensie': sensie,
       'sensies': sensies,
