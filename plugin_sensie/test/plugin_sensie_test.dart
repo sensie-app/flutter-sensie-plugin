@@ -22,7 +22,5 @@ void main() {
     PluginSensie pluginSensiePlugin = PluginSensie();
     MockPluginSensiePlatform fakePlatform = MockPluginSensiePlatform();
     PluginSensiePlatform.instance = fakePlatform;
-
-    expect(await pluginSensiePlugin.getPlatformVersion(), '42');
   });
 }

@@ -2,21 +2,34 @@ PODS:
   - Flutter (1.0.0)
   - plugin_sensie (0.0.1):
     - Flutter
+  - sensors (0.0.1):
+    - Flutter
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - plugin_sensie (from `.symlinks/plugins/plugin_sensie/ios`)
+  - sensors (from `.symlinks/plugins/sensors/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
   plugin_sensie:
     :path: ".symlinks/plugins/plugin_sensie/ios"
+  sensors:
+    :path: ".symlinks/plugins/sensors/ios"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/ios"
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  plugin_sensie: 9a5d9ec2f3b361b8623c7c67f380cb869f57d21c
+  plugin_sensie: 8f327a4879dcf3e4d0f5327942a1ed8108f344ce
+  sensors: 84eb7a30e47a649e4172b71d6e81be614c280336
+  shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
 
-PODFILE CHECKSUM: 663715e941f9adb426e33bf9376914006f9ea95b
+PODFILE CHECKSUM: d77e5cefa0ad2695dc753143301b51cfccb15760
 
 COCOAPODS: 1.11.3
