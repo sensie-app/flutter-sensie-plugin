@@ -122,7 +122,8 @@ class SensieEngine {
       print(userId);
       final resJSON = await startSessionRequest('calibration');
       print(resJSON);
-      final sessionId = resJSON.data.session.id;
+      print(resJSON['data']['session']['id']);
+      final sessionId = resJSON['data']['session']['id'];
       this.sessionId = sessionId;
       return CalibrationSession(accessToken, sessionId);
     } catch (e) {

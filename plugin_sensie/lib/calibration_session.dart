@@ -149,6 +149,7 @@ class CalibrationSession {
 
   Future<Map<String, dynamic>> captureSensie(
       CaptureSensieInput captureSensieInput) async {
+    canCaptureSensie = await checkCanCaptureSensie();
     if (!canCaptureSensie) {
       return {'message': "Can't capture sensie anymore"};
     }

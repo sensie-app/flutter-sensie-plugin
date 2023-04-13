@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
     print('Button pressed');
     try {
       _se = new SensieEngine(
-          initAccessToken: 'Junho_Sandbox.IC4TWWY-AGOEAMI-SQV4PTA-YJKXHOY');
+          initAccessToken: 'Sensi_Sandbox.DCYYXOI-MXLUGSY-TRUJN7Y-OE6JLIQ');
       print(_se.accessToken);
       print(await _se.connect());
       _cs = await _se.startCalibration(CalibrationInput(
@@ -61,6 +61,16 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void _onPressed2() async {
+    print('Button pressed');
+    Map<String, dynamic> sensie = await _cs.captureSensie(CaptureSensieInput(
+        flow: true,
+        onSensorData: (data) {
+          print(data);
+        }));
+    print(sensie);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +82,8 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text('Running on:'),
-            ElevatedButton(onPressed: _onPressed1, child: Text('Button'))
+            ElevatedButton(onPressed: _onPressed1, child: Text('Button1')),
+            ElevatedButton(onPressed: _onPressed2, child: Text('Button2'))
           ],
         ),
       ),
