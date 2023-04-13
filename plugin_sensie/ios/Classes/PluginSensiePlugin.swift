@@ -15,7 +15,7 @@ public class PluginSensiePlugin: NSObject, FlutterPlugin {
         result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments", details: nil))
         return
       }
-      guard let unwrappedArg1 = args["yaw"] as? NSDictionary else {
+      guard let unwrappedArg1 = args as? NSDictionary else {
         result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments", details: nil))
         return
       }
