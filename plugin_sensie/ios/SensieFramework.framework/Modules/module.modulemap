@@ -6,6 +6,6 @@ framework module SensieFramework {
 }
 
 module SensieFramework.Swift {
-    header "SensieFramework-Swift.h"
-    requires objc
+  header "SensieFramework-Swift.h"
+  requires objc
 }

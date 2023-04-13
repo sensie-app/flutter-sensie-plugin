@@ -15,8 +15,13 @@ public class PluginSensiePlugin: NSObject, FlutterPlugin {
         result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments", details: nil))
         return
       }
-      let arg1 = args["yaw"] as? Array<Double>
-      let nativeResult = SensieFramework.whipCounter(param: arg1)
+      // let arg1 = args["yaw"] as? NSDictionary
+      // let nativeResult = SensieFramework.whipCounter(param: arg1)
+      guard let unwrappedArg1 = args["yaw"] as? NSDictionary else {
+        result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments", details: nil))
+        return
+      }
+      let nativeResult = SensieFramework.whipCounter(param: unwrappedArg1)
       result(nativeResult)
     } else if call.method == "signalStrength" {
       guard let args = call.arguments as? [String: Any] else {
@@ -24,7 +29,11 @@ public class PluginSensiePlugin: NSObject, FlutterPlugin {
         return
       }
       let arg1 = args["sensies"] as? Array<Dictionary<String, Any>>
-      let nativeResult = SensieFramework.signalStrength(sensies: arg1)
+      guard let unwrappedArg1 = arg1 else {
+        result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments", details: nil))
+        return
+      }
+      let nativeResult = SensieFramework.signalStrength(sensies: unwrappedArg1)
       result(nativeResult)
     } else if call.method == "evaluateSensie" {
       guard let args = call.arguments as? [String: Any] else {
@@ -33,7 +42,15 @@ public class PluginSensiePlugin: NSObject, FlutterPlugin {
       }
       let arg1 = args["sensie"] as? Dictionary<String, Any>
       let arg2 = args["sensies"] as? Array<Dictionary<String, Any>>
-      let nativeResult = SensieFramework.evaluateSensie(sensie: arg1, sensies: arg2)
+      guard let unwrappedArg1 = arg1 else {
+        result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments", details: nil))
+        return
+      }
+      guard let unwrappedArg2 = arg2 else {
+        result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments", details: nil))
+        return
+      }
+      let nativeResult = SensieFramework.evaluateSensie(sensie: unwrappedArg1, sensies: unwrappedArg2)
       result(nativeResult)
     } else {
       result(FlutterMethodNotImplemented)
