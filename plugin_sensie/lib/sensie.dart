@@ -7,7 +7,7 @@ import 'types.dart';
 const String SENSIES = 'sensies';
 
 const String BASE_URL =
-    'https://cjl95m832l.execute-api.us-east-1.amazonaws.com/staging';
+    'https://cjl95m832l.execute-api.us-east-1.amazonaws.com/production';
 
 class SessionInfo {
   String sessionId;

@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:plugin_sensie/calibration_session.dart';
 import 'package:plugin_sensie/plugin_sensie.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+
+import 'package:plugin_sensie/sensie_engine.dart';
+import 'package:plugin_sensie/types.dart';
 
 enum _KeyType { Black, White }
 
@@ -36,6 +40,27 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late SensieEngine _se;
+  late CalibrationSession _cs;
+
+  void _onPressed1() async {
+    print('Button pressed');
+    try {
+      _se = new SensieEngine(
+          initAccessToken: 'Junho_Sandbox.IC4TWWY-AGOEAMI-SQV4PTA-YJKXHOY');
+      print(_se.accessToken);
+      print(await _se.connect());
+      _cs = await _se.startCalibration(CalibrationInput(
+          userId: 'junho',
+          onEnds: (res) {
+            print(res);
+          }));
+      print(_cs);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,8 +70,9 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
+          children: <Widget>[
             Text('Running on:'),
+            ElevatedButton(onPressed: _onPressed1, child: Text('Button'))
           ],
         ),
       ),

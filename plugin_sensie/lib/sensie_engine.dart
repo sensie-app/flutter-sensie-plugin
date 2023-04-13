@@ -75,8 +75,8 @@ class SensieEngine {
 
   Future<Map<String, dynamic>> connect() async {
     if (accessToken.isNotEmpty) {
-      bool canRecalibrate = await checkCanRecalibrate();
-      bool canEvaluate = await checkCanEvaluate();
+      canRecalibrate = await checkCanRecalibrate();
+      canEvaluate = await checkCanEvaluate();
 
       return {
         'message':
@@ -89,7 +89,7 @@ class SensieEngine {
 
   Future<dynamic> startSessionRequest(String type) async {
     const String path = '/session';
-    const String baseUrl = 'BASE_URL';
+    const String baseUrl = BASE_URL;
 
     final Map<String, dynamic> body = {'userId': userId, 'type': type};
 
@@ -110,6 +110,7 @@ class SensieEngine {
 
   Future<CalibrationSession> startCalibration(
       CalibrationInput calibrationInput) async {
+    print(canRecalibrate);
     try {
       if (!canRecalibrate) {
         throw Exception(
@@ -118,7 +119,9 @@ class SensieEngine {
 
       userId = calibrationInput.userId;
       onEnds = calibrationInput.onEnds;
+      print(userId);
       final resJSON = await startSessionRequest('calibration');
+      print(resJSON);
       final sessionId = resJSON.data.session.id;
       this.sessionId = sessionId;
       return CalibrationSession(accessToken, sessionId);
