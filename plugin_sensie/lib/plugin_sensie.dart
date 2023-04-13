@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-// import 'plugin_sensie_platform_interface.dart';
 
 class PluginSensie {
   static const MethodChannel _channel =
