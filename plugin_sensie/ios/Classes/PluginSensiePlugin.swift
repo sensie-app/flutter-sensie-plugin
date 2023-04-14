@@ -11,15 +11,11 @@ public class PluginSensiePlugin: NSObject, FlutterPlugin {
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     if call.method == "whipCounter" {
-      guard let args = call.arguments as? [String: Any] else {
+      guard let args = call.arguments as? NSDictionary else {
         result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments", details: nil))
         return
       }
-      guard let unwrappedArg1 = args as? NSDictionary else {
-        result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments", details: nil))
-        return
-      }
-      let nativeResult = SensieFramework.whipCounter(param: unwrappedArg1)
+      let nativeResult = SensieFramework.whipCounter(param: args)
       result(nativeResult)
     } else if call.method == "signalStrength" {
       guard let args = call.arguments as? [String: Any] else {

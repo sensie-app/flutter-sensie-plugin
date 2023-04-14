@@ -34,16 +34,17 @@ class CalibrationSession {
     StreamSubscription<GyroscopeEvent>? gyroSubscription;
     StreamSubscription<AccelerometerEvent>? accelSubscription;
 
-    SensorData sensorData = SensorData(
-      gyroX: [],
-      gyroY: [],
-      gyroZ: [],
-      accelX: [],
-      accelY: [],
-      accelZ: [],
+    sensorData = SensorData(
+      gyroX: [0],
+      gyroY: [0],
+      gyroZ: [0],
+      accelX: [0],
+      accelY: [0],
+      accelZ: [0],
     );
 
     gyroSubscription = gyroscopeEvents.listen((GyroscopeEvent event) {
+      print("Gyroscope event: $event");
       sensorData.gyroX.add(event.x);
       sensorData.gyroY.add(event.y);
       sensorData.gyroZ.add(event.z);
@@ -51,6 +52,7 @@ class CalibrationSession {
     });
 
     accelSubscription = accelerometerEvents.listen((AccelerometerEvent event) {
+      print("Gyroscope event: $event");
       sensorData.accelX.add(event.x);
       sensorData.accelY.add(event.y);
       sensorData.accelZ.add(event.z);
@@ -166,8 +168,11 @@ class CalibrationSession {
       );
       roundSensorData();
 
-      Map<String, dynamic> whipCounterRes =
-          await PluginSensie.whipCounter(sensorData.gyroZ);
+      print("SensorData == ");
+      print(sensorData.gyroZ);
+      final dynamic whipCounterRes =
+          await PluginSensie.whipCounter({"yaw": sensorData.gyroZ});
+      print(whipCounterRes);
       int whipCount = whipCounterRes['whipCount'];
       List<double> avgFlatCrest = whipCounterRes['avgFlatCrest'];
 

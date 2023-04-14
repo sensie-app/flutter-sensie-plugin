@@ -216,7 +216,8 @@ class SensieEngine {
       stopSensors(gyroSubscription: subGyro, accelSubscription: subAcc);
       roundSensorData();
 
-      final dynamic whipData = await PluginSensie.whipCounter(sensorData.gyroZ);
+      final dynamic whipData =
+          await PluginSensie.whipCounter({"yaw": sensorData.gyroZ});
       final int whipCount = whipData['whipCount'];
       final List<double> avgFlatCrest = whipData['avgFlatCrest'];
 
