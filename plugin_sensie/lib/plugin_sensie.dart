@@ -11,7 +11,7 @@ class PluginSensie {
     return result;
   }
 
-  static Future<int> signalStrength(List<Map<String, dynamic>> sensies) async {
+  static Future<int> signalStrength(List<dynamic> sensies) async {
     final Map<String, dynamic> args = <String, dynamic>{
       'sensies': sensies,
     };
@@ -19,13 +19,14 @@ class PluginSensie {
     return result;
   }
 
-  static Future<int> evaluateSensie(
+  static Future<Map<Object?, Object?>> evaluateSensie(
       dynamic sensie, List<dynamic> sensies) async {
     final Map<String, dynamic> args = <String, dynamic>{
       'sensie': sensie,
       'sensies': sensies,
     };
-    final int result = await _channel.invokeMethod('evaluateSensie', args);
+    final Map<Object?, Object?> result =
+        await _channel.invokeMethod('evaluateSensie', args);
     return result;
   }
 }

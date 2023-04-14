@@ -35,7 +35,7 @@ class Sensie {
   late int whips;
   late int flowing;
   late List<dynamic> signal;
-  late int agreement;
+  late Enum agreement;
   late SensorData sensorData;
   late SessionInfo sessionInfo;
 
@@ -44,13 +44,13 @@ class Sensie {
     whips = sensieInfo.whips;
     flowing = sensieInfo.flowing;
     signal = sensieInfo.signal;
-    agreement = 0;
+    agreement = Agreement.disagree;
     sensorData = sensieInfo.sensorData;
     sessionInfo = sessionInfo;
   }
 
   Future<Map<String, dynamic>> storeSensieRequest(
-      int whipCount, int flowing, int agreement) async {
+      int whipCount, int flowing, Enum agreement) async {
     final path = '/session/${sessionInfo.sessionId}/sensie';
 
     final body = {
@@ -106,9 +106,9 @@ class Sensie {
     return jsonValue != null ? json.decode(jsonValue) : null;
   }
 
-  Future<void> setAgreement(int agreement) async {
+  Future<void> setAgreement(Enum agreement) async {
     this.agreement = agreement;
-    if (agreement == Agreement.agree.index) {
+    if (agreement == Agreement.agree) {
       await addSensie({
         'whipCount': whips,
         'signal': signal,

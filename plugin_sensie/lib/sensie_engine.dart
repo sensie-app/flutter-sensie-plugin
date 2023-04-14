@@ -60,7 +60,7 @@ class SensieEngine {
       return false;
     }
     for (int i = 0; i < sensies.length; i++) {
-      if (sensies[i].flow == 1) {
+      if (sensies[i]['flow'] == 1) {
         flow++;
       } else {
         block++;
@@ -243,31 +243,29 @@ class SensieEngine {
         final dynamic sensie = {
           'whipCount': whipCount,
           'signal': avgFlatCrest,
-          'sensorData': sensorData,
+          'sensorData': sensorData.toJson(),
         };
         final dynamic evaluation =
             await PluginSensie.evaluateSensie(sensie, sensiesData);
         final int flowing = evaluation['flowing'];
+        print("flowing");
+        print(flowing);
 
         final retSensie = Sensie(
           sensieInfo: SensieInfo(
             whips: whipCount,
             flowing: flowing,
             signal: avgFlatCrest,
-            sensorData: SensorData(
-              gyroX: [],
-              gyroY: [],
-              gyroZ: [],
-              accelX: [],
-              accelY: [],
-              accelZ: [],
-            ),
+            sensorData: sensorData,
           ),
           sessionInfo: SessionInfo(
             sessionId: sessionId,
             accessToken: accessToken,
           ),
         );
+        print(sessionId);
+        print(accessToken);
+        print("sessionInfo");
 
         final dynamic calibrationStrength =
             await PluginSensie.signalStrength(sensiesData);

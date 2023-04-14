@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:plugin_sensie/calibration_session.dart';
 import 'package:plugin_sensie/plugin_sensie.dart';
 import 'package:flutter/material.dart';
+import 'package:plugin_sensie/sensie.dart';
 import 'dart:async';
 
 import 'package:plugin_sensie/sensie_engine.dart';
@@ -42,6 +43,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late SensieEngine _se;
   late CalibrationSession _cs;
+  late Sensie _sensie;
 
   void _onPressed1() async {
     print('Button pressed');
@@ -64,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _onPressed2() async {
     print('Button pressed');
     Map<String, dynamic> sensie = await _cs.captureSensie(CaptureSensieInput(
-        flow: true,
+        flow: false,
         onSensorData: (data) {
           print(data);
         }));
@@ -78,14 +80,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _onPressed4() async {
     print('Button pressed');
-    Map<String, dynamic> sensie =
-        await _se.captureSensie(CaptureEvaluateSensieInput(
+    _sensie = await _se.captureSensie(CaptureEvaluateSensieInput(
       userId: 'junho',
       onSensorData: (data) {
         print(data);
       },
     ));
-    print(sensie);
+    print(_sensie);
+  }
+
+  void _onPressed5() async {
+    print('Button pressed');
+    _sensie.setAgreement(Agreement.agree);
   }
 
   @override
@@ -103,6 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(onPressed: _onPressed2, child: Text('Button2')),
             ElevatedButton(onPressed: _onPressed3, child: Text('Button3')),
             ElevatedButton(onPressed: _onPressed4, child: Text('Button4')),
+            ElevatedButton(onPressed: _onPressed5, child: Text('Button5')),
           ],
         ),
       ),
