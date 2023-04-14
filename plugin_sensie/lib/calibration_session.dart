@@ -35,12 +35,12 @@ class CalibrationSession {
     StreamSubscription<AccelerometerEvent>? accelSubscription;
 
     sensorData = SensorData(
-      gyroX: [0],
-      gyroY: [0],
-      gyroZ: [0],
-      accelX: [0],
-      accelY: [0],
-      accelZ: [0],
+      gyroX: [],
+      gyroY: [],
+      gyroZ: [],
+      accelX: [],
+      accelY: [],
+      accelZ: [],
     );
 
     gyroSubscription = gyroscopeEvents.listen((GyroscopeEvent event) {
@@ -168,18 +168,16 @@ class CalibrationSession {
       );
       roundSensorData();
 
-      print("SensorData == ");
-      print(sensorData.gyroZ);
       final dynamic whipCounterRes =
           await PluginSensie.whipCounter({"yaw": sensorData.gyroZ});
-      print(whipCounterRes);
       int whipCount = whipCounterRes['whipCount'];
-      List<double> avgFlatCrest = whipCounterRes['avgFlatCrest'];
+      List<dynamic> avgFlatCrest =
+          whipCounterRes['avgFlatCrest'].map((item) => item as double).toList();
 
       currentSensie = {
         'whipCount': whipCount,
         'signal': avgFlatCrest,
-        'sensorData': sensorData,
+        'sensorData': sensorData.toJson(),
         'flow': captureSensieInput.flow ? 1 : -1,
       };
 

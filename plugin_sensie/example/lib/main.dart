@@ -71,6 +71,23 @@ class _MyHomePageState extends State<MyHomePage> {
     print(sensie);
   }
 
+  void _onPressed3() async {
+    print('Button pressed');
+    await _se.startEvaluation('junho');
+  }
+
+  void _onPressed4() async {
+    print('Button pressed');
+    Map<String, dynamic> sensie =
+        await _se.captureSensie(CaptureEvaluateSensieInput(
+      userId: 'junho',
+      onSensorData: (data) {
+        print(data);
+      },
+    ));
+    print(sensie);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,7 +100,9 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Text('Running on:'),
             ElevatedButton(onPressed: _onPressed1, child: Text('Button1')),
-            ElevatedButton(onPressed: _onPressed2, child: Text('Button2'))
+            ElevatedButton(onPressed: _onPressed2, child: Text('Button2')),
+            ElevatedButton(onPressed: _onPressed3, child: Text('Button3')),
+            ElevatedButton(onPressed: _onPressed4, child: Text('Button4')),
           ],
         ),
       ),

@@ -53,6 +53,7 @@ class SensieEngine {
 
   Future<bool> checkCanEvaluate() async {
     List<dynamic>? sensies = await getDataFromAsyncStorage(SENSIES);
+    print(sensies);
     int flow = 0, block = 0;
     if (sensies == null) {
       canEvaluate = false;
@@ -131,12 +132,12 @@ class SensieEngine {
     }
   }
 
-  Map<String, StreamSubscription> startSensors(
+  Map<String, StreamSubscription<dynamic>> startSensors(
       {Function(SensorData)? callback}) {
     StreamSubscription<GyroscopeEvent>? gyroSubscription;
     StreamSubscription<AccelerometerEvent>? accelSubscription;
 
-    SensorData sensorData = SensorData(
+    sensorData = SensorData(
       gyroX: [],
       gyroY: [],
       gyroZ: [],
@@ -199,16 +200,32 @@ class SensieEngine {
     );
   }
 
+  Future<Map<String, dynamic>> startEvaluation(String userId) async {
+    canEvaluate = true;
+    if (canEvaluate) {
+      this.userId = userId;
+      final Map<String, dynamic> resJson =
+          await startSessionRequest('evaluation');
+      print(resJson);
+      sessionId = resJson['data']['session']['id'];
+      return {
+        'message':
+            'Successfully connected. Recalibrate: ${canRecalibrate}, Evaluate: ${canEvaluate}',
+      };
+    }
+    return {'message': "Can't evaluate sensie. Please check async storage."};
+  }
+
   Future<dynamic> captureSensie(
       CaptureEvaluateSensieInput captureSensieInput) async {
     if (captureSensieInput.userId != userId) {
       return {'message': 'User id is not valid.'};
     }
 
-    final Map<String, dynamic> sensors =
+    final Map<String, StreamSubscription<dynamic>> sensors =
         startSensors(callback: captureSensieInput.onSensorData);
-    final StreamSubscription subGyro = sensors['subGyro'];
-    final StreamSubscription subAcc = sensors['subAcc'];
+    final StreamSubscription<dynamic> subGyro = sensors['gyroSubscription']!;
+    final StreamSubscription<dynamic> subAcc = sensors['accelSubscription']!;
 
     final completer = Completer();
 
@@ -219,8 +236,8 @@ class SensieEngine {
       final dynamic whipData =
           await PluginSensie.whipCounter({"yaw": sensorData.gyroZ});
       final int whipCount = whipData['whipCount'];
-      final List<double> avgFlatCrest = whipData['avgFlatCrest'];
-
+      List<dynamic> avgFlatCrest =
+          whipData['avgFlatCrest'].map((item) => item as double).toList();
       if (whipCount == 3) {
         final dynamic sensiesData = await getDataFromAsyncStorage(SENSIES);
         final dynamic sensie = {

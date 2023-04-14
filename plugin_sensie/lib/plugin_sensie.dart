@@ -20,7 +20,7 @@ class PluginSensie {
   }
 
   static Future<int> evaluateSensie(
-      Map<String, dynamic> sensie, List<Map<String, dynamic>> sensies) async {
+      dynamic sensie, List<dynamic> sensies) async {
     final Map<String, dynamic> args = <String, dynamic>{
       'sensie': sensie,
       'sensies': sensies,

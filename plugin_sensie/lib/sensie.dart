@@ -19,7 +19,7 @@ class SessionInfo {
 class SensieInfo {
   int whips;
   int flowing;
-  List<double> signal;
+  List<dynamic> signal;
   SensorData sensorData;
 
   SensieInfo({
@@ -34,7 +34,7 @@ class Sensie {
   late String id;
   late int whips;
   late int flowing;
-  late List<double> signal;
+  late List<dynamic> signal;
   late int agreement;
   late SensorData sensorData;
   late SessionInfo sessionInfo;

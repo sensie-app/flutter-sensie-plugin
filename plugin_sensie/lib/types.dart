@@ -34,6 +34,17 @@ class SensorData {
     required this.accelY,
     required this.accelZ,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'gyroX': gyroX,
+      'gyroY': gyroY,
+      'gyroZ': gyroZ,
+      'accelX': accelX,
+      'accelY': accelY,
+      'accelZ': accelZ,
+    };
+  }
 }
 
 class EvaluateSensieReturn {
