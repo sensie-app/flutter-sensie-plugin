@@ -2,7 +2,17 @@
 Flutter plugin for integrating Sensie
 
 ## Installation
-...To be updated
+In your project, open the pubspec.yaml file and add the plugin as a dependency under the dependencies section. Use the plugin name and the latest version you found on pub.dev. For example:
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_sensie: 0.0.1
+```
+And Install the plugin: Run the following command in your terminal, in your project's root directory, to download and install the plugin:
+```bash
+flutter pub get
+```
 
 # Usage
 ## Import
