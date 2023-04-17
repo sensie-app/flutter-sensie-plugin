@@ -1,7 +1,7 @@
 name: plugin_sensie
-description: A new Flutter plugin project.
+description: Sensie Flutter plugin
 version: 0.0.1
-homepage:
+homepage: https://github.com/sensie-app/flutter-sensie-plugin
 
 environment:
   sdk: '>=2.18.5 <3.0.0'
