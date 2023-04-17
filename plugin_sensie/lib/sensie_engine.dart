@@ -53,7 +53,6 @@ class SensieEngine {
 
   Future<bool> checkCanEvaluate() async {
     List<dynamic>? sensies = await getDataFromAsyncStorage(SENSIES);
-    print(sensies);
     int flow = 0, block = 0;
     if (sensies == null) {
       canEvaluate = false;
@@ -111,7 +110,6 @@ class SensieEngine {
 
   Future<CalibrationSession> startCalibration(
       CalibrationInput calibrationInput) async {
-    print(canRecalibrate);
     try {
       if (!canRecalibrate) {
         throw Exception(
@@ -120,10 +118,7 @@ class SensieEngine {
 
       userId = calibrationInput.userId;
       onEnds = calibrationInput.onEnds;
-      print(userId);
       final resJSON = await startSessionRequest('calibration');
-      print(resJSON);
-      print(resJSON['data']['session']['id']);
       final sessionId = resJSON['data']['session']['id'];
       this.sessionId = sessionId;
       return CalibrationSession(accessToken, sessionId);
@@ -206,7 +201,6 @@ class SensieEngine {
       this.userId = userId;
       final Map<String, dynamic> resJson =
           await startSessionRequest('evaluation');
-      print(resJson);
       sessionId = resJson['data']['session']['id'];
       return {
         'message':
@@ -248,8 +242,6 @@ class SensieEngine {
         final dynamic evaluation =
             await PluginSensie.evaluateSensie(sensie, sensiesData);
         final int flowing = evaluation['flowing'];
-        print("flowing");
-        print(flowing);
 
         final retSensie = Sensie(
           sensieInfo: SensieInfo(
@@ -263,9 +255,6 @@ class SensieEngine {
             accessToken: accessToken,
           ),
         );
-        print(sessionId);
-        print(accessToken);
-        print("sessionInfo");
 
         final dynamic calibrationStrength =
             await PluginSensie.signalStrength(sensiesData);

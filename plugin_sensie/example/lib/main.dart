@@ -46,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
   late Sensie _sensie;
 
   void _onPressed1() async {
-    print('Button pressed');
+    print('Button1 pressed');
     try {
       _se = new SensieEngine(
           initAccessToken: 'Sensi_Sandbox.DCYYXOI-MXLUGSY-TRUJN7Y-OE6JLIQ');
@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _onPressed2() async {
-    print('Button pressed');
+    print('Button2 pressed');
     Map<String, dynamic> sensie = await _cs.captureSensie(CaptureSensieInput(
         flow: false,
         onSensorData: (data) {
@@ -74,12 +74,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _onPressed3() async {
-    print('Button pressed');
+    print('Button3 pressed');
     await _se.startEvaluation('junho');
   }
 
   void _onPressed4() async {
-    print('Button pressed');
+    print('Button4 pressed');
     _sensie = await _se.captureSensie(CaptureEvaluateSensieInput(
       userId: 'junho',
       onSensorData: (data) {

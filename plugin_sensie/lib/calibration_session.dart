@@ -44,7 +44,6 @@ class CalibrationSession {
     );
 
     gyroSubscription = gyroscopeEvents.listen((GyroscopeEvent event) {
-      print("Gyroscope event: $event");
       sensorData.gyroX.add(event.x);
       sensorData.gyroY.add(event.y);
       sensorData.gyroZ.add(event.z);
@@ -52,7 +51,6 @@ class CalibrationSession {
     });
 
     accelSubscription = accelerometerEvents.listen((AccelerometerEvent event) {
-      print("Gyroscope event: $event");
       sensorData.accelX.add(event.x);
       sensorData.accelY.add(event.y);
       sensorData.accelZ.add(event.z);

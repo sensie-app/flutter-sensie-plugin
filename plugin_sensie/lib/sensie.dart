@@ -50,7 +50,6 @@ class Sensie {
 
   Future<Map<String, dynamic>> storeSensieRequest(
       int whipCount, int flowing, Agreement agreement) async {
-    print(sessionInfo.sessionId);
     final path = '/session/${sessionInfo.sessionId}/sensie';
 
     final body = {
@@ -121,7 +120,6 @@ class Sensie {
       flowing,
       agreement,
     );
-    print(resJSON);
     if (resJSON['data'] != null && resJSON['data']['sensie'] != null) {
       id = resJSON['data']['sensie']['id'];
     } else {
