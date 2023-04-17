@@ -84,3 +84,7 @@ sensie object will be an object with the following properties:
 ```dart
 _sensie.setAgreement(Agreement.agree);
 ```
+
+## Reference App
+
+Go to plugin_sensie/example and run 'flutter run'
