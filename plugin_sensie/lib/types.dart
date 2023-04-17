@@ -73,3 +73,18 @@ enum Agreement {
   disagree,
   agreeAfterReflecting,
 }
+
+extension AgreementExtension on Agreement {
+  int get value {
+    switch (this) {
+      case Agreement.agree:
+        return 1;
+      case Agreement.disagree:
+        return -1;
+      case Agreement.agreeAfterReflecting:
+        return 2;
+      default:
+        return 0;
+    }
+  }
+}
