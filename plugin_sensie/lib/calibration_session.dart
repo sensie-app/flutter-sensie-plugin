@@ -34,7 +34,7 @@ class CalibrationSession {
     StreamSubscription<GyroscopeEvent>? gyroSubscription;
     StreamSubscription<AccelerometerEvent>? accelSubscription;
 
-    SensorData sensorData = SensorData(
+    sensorData = SensorData(
       gyroX: [],
       gyroY: [],
       gyroZ: [],
@@ -149,6 +149,7 @@ class CalibrationSession {
 
   Future<Map<String, dynamic>> captureSensie(
       CaptureSensieInput captureSensieInput) async {
+    canCaptureSensie = await checkCanCaptureSensie();
     if (!canCaptureSensie) {
       return {'message': "Can't capture sensie anymore"};
     }
@@ -165,15 +166,16 @@ class CalibrationSession {
       );
       roundSensorData();
 
-      Map<String, dynamic> whipCounterRes =
-          await PluginSensie.whipCounter(sensorData.gyroZ);
+      final dynamic whipCounterRes =
+          await PluginSensie.whipCounter({"yaw": sensorData.gyroZ});
       int whipCount = whipCounterRes['whipCount'];
-      List<double> avgFlatCrest = whipCounterRes['avgFlatCrest'];
+      List<dynamic> avgFlatCrest =
+          whipCounterRes['avgFlatCrest'].map((item) => item as double).toList();
 
       currentSensie = {
         'whipCount': whipCount,
         'signal': avgFlatCrest,
-        'sensorData': sensorData,
+        'sensorData': sensorData.toJson(),
         'flow': captureSensieInput.flow ? 1 : -1,
       };
 

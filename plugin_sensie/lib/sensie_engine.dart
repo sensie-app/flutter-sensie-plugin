@@ -59,7 +59,7 @@ class SensieEngine {
       return false;
     }
     for (int i = 0; i < sensies.length; i++) {
-      if (sensies[i].flow == 1) {
+      if (sensies[i]['flow'] == 1) {
         flow++;
       } else {
         block++;
@@ -75,8 +75,8 @@ class SensieEngine {
 
   Future<Map<String, dynamic>> connect() async {
     if (accessToken.isNotEmpty) {
-      bool canRecalibrate = await checkCanRecalibrate();
-      bool canEvaluate = await checkCanEvaluate();
+      canRecalibrate = await checkCanRecalibrate();
+      canEvaluate = await checkCanEvaluate();
 
       return {
         'message':
@@ -89,7 +89,7 @@ class SensieEngine {
 
   Future<dynamic> startSessionRequest(String type) async {
     const String path = '/session';
-    const String baseUrl = 'BASE_URL';
+    const String baseUrl = BASE_URL;
 
     final Map<String, dynamic> body = {'userId': userId, 'type': type};
 
@@ -119,7 +119,7 @@ class SensieEngine {
       userId = calibrationInput.userId;
       onEnds = calibrationInput.onEnds;
       final resJSON = await startSessionRequest('calibration');
-      final sessionId = resJSON.data.session.id;
+      final sessionId = resJSON['data']['session']['id'];
       this.sessionId = sessionId;
       return CalibrationSession(accessToken, sessionId);
     } catch (e) {
@@ -127,12 +127,12 @@ class SensieEngine {
     }
   }
 
-  Map<String, StreamSubscription> startSensors(
+  Map<String, StreamSubscription<dynamic>> startSensors(
       {Function(SensorData)? callback}) {
     StreamSubscription<GyroscopeEvent>? gyroSubscription;
     StreamSubscription<AccelerometerEvent>? accelSubscription;
 
-    SensorData sensorData = SensorData(
+    sensorData = SensorData(
       gyroX: [],
       gyroY: [],
       gyroZ: [],
@@ -195,16 +195,31 @@ class SensieEngine {
     );
   }
 
+  Future<Map<String, dynamic>> startEvaluation(String userId) async {
+    canEvaluate = true;
+    if (canEvaluate) {
+      this.userId = userId;
+      final Map<String, dynamic> resJson =
+          await startSessionRequest('evaluation');
+      sessionId = resJson['data']['session']['id'];
+      return {
+        'message':
+            'Successfully connected. Recalibrate: ${canRecalibrate}, Evaluate: ${canEvaluate}',
+      };
+    }
+    return {'message': "Can't evaluate sensie. Please check async storage."};
+  }
+
   Future<dynamic> captureSensie(
       CaptureEvaluateSensieInput captureSensieInput) async {
     if (captureSensieInput.userId != userId) {
       return {'message': 'User id is not valid.'};
     }
 
-    final Map<String, dynamic> sensors =
+    final Map<String, StreamSubscription<dynamic>> sensors =
         startSensors(callback: captureSensieInput.onSensorData);
-    final StreamSubscription subGyro = sensors['subGyro'];
-    final StreamSubscription subAcc = sensors['subAcc'];
+    final StreamSubscription<dynamic> subGyro = sensors['gyroSubscription']!;
+    final StreamSubscription<dynamic> subAcc = sensors['accelSubscription']!;
 
     final completer = Completer();
 
@@ -212,16 +227,17 @@ class SensieEngine {
       stopSensors(gyroSubscription: subGyro, accelSubscription: subAcc);
       roundSensorData();
 
-      final dynamic whipData = await PluginSensie.whipCounter(sensorData.gyroZ);
+      final dynamic whipData =
+          await PluginSensie.whipCounter({"yaw": sensorData.gyroZ});
       final int whipCount = whipData['whipCount'];
-      final List<double> avgFlatCrest = whipData['avgFlatCrest'];
-
+      List<dynamic> avgFlatCrest =
+          whipData['avgFlatCrest'].map((item) => item as double).toList();
       if (whipCount == 3) {
         final dynamic sensiesData = await getDataFromAsyncStorage(SENSIES);
         final dynamic sensie = {
           'whipCount': whipCount,
           'signal': avgFlatCrest,
-          'sensorData': sensorData,
+          'sensorData': sensorData.toJson(),
         };
         final dynamic evaluation =
             await PluginSensie.evaluateSensie(sensie, sensiesData);
@@ -232,14 +248,7 @@ class SensieEngine {
             whips: whipCount,
             flowing: flowing,
             signal: avgFlatCrest,
-            sensorData: SensorData(
-              gyroX: [],
-              gyroY: [],
-              gyroZ: [],
-              accelX: [],
-              accelY: [],
-              accelZ: [],
-            ),
+            sensorData: sensorData,
           ),
           sessionInfo: SessionInfo(
             sessionId: sessionId,

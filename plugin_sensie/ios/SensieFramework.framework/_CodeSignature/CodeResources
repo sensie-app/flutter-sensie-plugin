@@ -6,144 +6,86 @@
 	<dict>
 		<key>Headers/SensieFramework-Swift.h</key>
 		<data>
-		AIJWgjYif5i93nrL6kTxu72L800=
+		uIVrOSwWD0VFFpJs/6A0lJOFV48=
 		</data>
 		<key>Headers/SensieFramework.h</key>
 		<data>
-		5czLS3NH6TvM2V+9RlY3Ug4nbSs=
+		Cjf/SMYFcxEUwkgBwFLZtMJj4lw=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		GcvV4mJu8+UBAqCliPQ89TQ6dIs=
+		54yXl2iDz4apSEL3bmARHLqrJzs=
 		</data>
 		<key>Modules/SensieFramework.swiftmodule/Project/arm64-apple-ios.swiftsourceinfo</key>
 		<data>
-		hxBNfATm58s5Fh/tZxyUCciMqt4=
+		TwwXN2o9QFa4HdxK5p36c0VkwJg=
 		</data>
-		<key>Modules/SensieFramework.swiftmodule/Project/armv7-apple-ios.swiftsourceinfo</key>
+		<key>Modules/SensieFramework.swiftmodule/arm64-apple-ios.abi.json</key>
 		<data>
-		J6VLvaq2pI9Q14/sLUmHnUyohfc=
+		FSPnLbho3G+LL9smI3XgVOqBIQ4=
 		</data>
 		<key>Modules/SensieFramework.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<data>
-		ONyF/sPrbNVRAee08Z3XRF5IPhI=
+		bG8/CFa5ACfa9/8bmsQoD/pFrJM=
 		</data>
 		<key>Modules/SensieFramework.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<data>
-		jXstekIh/znuhn0cU5UrRViZP7U=
-		</data>
-		<key>Modules/SensieFramework.swiftmodule/armv7-apple-ios.swiftdoc</key>
-		<data>
-		jNz7xib+gHHkaqmQK2WyzG1V4IM=
-		</data>
-		<key>Modules/SensieFramework.swiftmodule/armv7-apple-ios.swiftmodule</key>
-		<data>
-		cm4aJjJ8lcUtIc+p0olpQpROUf8=
+		ooInHS6fHP7cVTkzjr5vdy5W8CE=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
-		U/hTt+dtOceozAkCfcXQXGlLxV8=
+		MM1VHIq5yKCtvKqKfN0KQK3YCHU=
 		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
 		<key>Headers/SensieFramework-Swift.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			AIJWgjYif5i93nrL6kTxu72L800=
-			</data>
 			<key>hash2</key>
 			<data>
-			MSucLZK686TsQeuLn37SL3qoxbbO2dwvrPpVqOdsnuA=
+			vjrAX4g+MjiKpZ5ToWOdgGY2mWoz+J60k6VMKG+QnjE=
 			</data>
 		</dict>
 		<key>Headers/SensieFramework.h</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			5czLS3NH6TvM2V+9RlY3Ug4nbSs=
-			</data>
 			<key>hash2</key>
 			<data>
-			wUEShjWLX17uPH9kI4u5DfiaS5O0jq41wgOJVEwVvBI=
+			dwKqTGeHbvDlj200ttFnTzh0H2lLIU6RBdXGGE/CU4E=
 			</data>
 		</dict>
 		<key>Modules/SensieFramework.swiftmodule/Project/arm64-apple-ios.swiftsourceinfo</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			hxBNfATm58s5Fh/tZxyUCciMqt4=
-			</data>
 			<key>hash2</key>
 			<data>
-			oCGfwnRtN4vNIb49OTcXMddmrPDLaPhZv6WM+V0sVJk=
+			PlcIJaxpdHS+Qysg3L7F6xvNNYxUjuvBNi3IGeyAXHA=
 			</data>
 		</dict>
-		<key>Modules/SensieFramework.swiftmodule/Project/armv7-apple-ios.swiftsourceinfo</key>
+		<key>Modules/SensieFramework.swiftmodule/arm64-apple-ios.abi.json</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			J6VLvaq2pI9Q14/sLUmHnUyohfc=
-			</data>
 			<key>hash2</key>
 			<data>
-			OYt3mrRzDr2Pvl4QvcpEVJr5BWu9ZYzZdv2K2nOsC00=
+			KnRdWE4y6t4QM5zi5JDptPdHFgJy1Tku+7GLkZS2aNM=
 			</data>
 		</dict>
 		<key>Modules/SensieFramework.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			ONyF/sPrbNVRAee08Z3XRF5IPhI=
-			</data>
 			<key>hash2</key>
 			<data>
-			wb+R55VkZGq3VEq43mx+lWxSAA8wTPEIOfj8Srjk9ds=
+			At55zaBzdO6m7j54zWQLLAtVhzwCuqMT4Y29iNgkNcw=
 			</data>
 		</dict>
 		<key>Modules/SensieFramework.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			jXstekIh/znuhn0cU5UrRViZP7U=
-			</data>
 			<key>hash2</key>
 			<data>
-			Wro8b2Rsu+LAI47JrZUDveKTrTFHx7encgUeD0Fvkfw=
-			</data>
-		</dict>
-		<key>Modules/SensieFramework.swiftmodule/armv7-apple-ios.swiftdoc</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			jNz7xib+gHHkaqmQK2WyzG1V4IM=
-			</data>
-			<key>hash2</key>
-			<data>
-			mLRGmHn9xqkSE5ZMc5dIFNousSUc3czaOCBQxZz77jc=
-			</data>
-		</dict>
-		<key>Modules/SensieFramework.swiftmodule/armv7-apple-ios.swiftmodule</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			cm4aJjJ8lcUtIc+p0olpQpROUf8=
-			</data>
-			<key>hash2</key>
-			<data>
-			+f0H19uqx7B2VlexO8AUkEv06NYpdBjAj1WRuU2XT74=
+			RXuoDktdMv4Scxu9940/LEl0qdt8TJAZKB/Nk841Tq8=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
 		<dict>
-			<key>hash</key>
-			<data>
-			U/hTt+dtOceozAkCfcXQXGlLxV8=
-			</data>
 			<key>hash2</key>
 			<data>
-			FAf4w4KpRHuCd6tjBE6uxzwPUH+YOpr37wFKlgskdjM=
+			X+mytOejLR8hJYIUx9bFRfIaduBnTYtBs7KRcL+JOIQ=
 			</data>
 		</dict>
 	</dict>
