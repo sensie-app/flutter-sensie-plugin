@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="colorPrimary" format="reference" />
+    <attr name="colorPrimaryVariant" format="reference" />
+    <attr name="colorOnPrimary" format="reference" />
+    <attr name="colorSecondary" format="reference" />
+    <attr name="colorSecondaryVariant" format="reference" />
+    <attr name="colorOnSecondary" format="reference" />
     <!-- Theme applied to the Android Window while the process is starting when the OS's Dark Mode setting is off -->
     <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <!-- Show a splash screen on the activity. Automatically removed when

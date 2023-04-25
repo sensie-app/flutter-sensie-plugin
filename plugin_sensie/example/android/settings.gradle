@@ -1,4 +1,7 @@
 include ':app'
+include ':plugin_sensie'
+project(':plugin_sensie').projectDir = new File('../plugin_sensie/android')
+
 
 def localPropertiesFile = new File(rootProject.projectDir, "local.properties")
 def properties = new Properties()

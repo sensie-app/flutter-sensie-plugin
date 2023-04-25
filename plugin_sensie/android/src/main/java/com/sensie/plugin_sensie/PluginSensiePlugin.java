@@ -1,59 +1,73 @@
 package com.sensie.plugin_sensie;
 
 import androidx.annotation.NonNull;
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
+import java.util.List;
+import java.util.Map;
+import com.sensie.sensielibrary.Sensie;
 
-/** PluginSensiePlugin */
 public class PluginSensiePlugin implements FlutterPlugin, MethodCallHandler {
-  /// The MethodChannel that will the communication between Flutter and native
-  /// Android
-  ///
-  /// This local reference serves to register the plugin with the Flutter Engine
-  /// and unregister it
-  /// when the Flutter Engine is detached from the Activity
-  private MethodChannel channel;
-  private Synth synth;
-  private static final String channelName = "plugin_sensie";
+    private MethodChannel channel;
 
-  private static void setup(PluginSensiePlugin plugin, BinaryMessenger binaryMessenger) {
-    plugin.channel = new MethodChannel(binaryMessenger, channelName);
-    plugin.channel.setMethodCallHandler(plugin);
-    plugin.synth = new Synth();
-    plugin.synth.start();
-  }
-
-  @Override
-  public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-    setup(this, flutterPluginBinding.getBinaryMessenger());
-  }
-
-  @Override
-  public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    if (call.method.equals("getPlatformVersion")) {
-      result.success("Android " + android.os.Build.VERSION.RELEASE);
-    } else if (call.method.equals("onKeyDown")) {
-      try {
-        ArrayList arguments = (ArrayList) call.arguments;
-        int numKeysDown = synth.keyDown((Integer) arguments.get(0));
-        result.success(numKeysDown);
-      } catch (Exception ex) {
-        result.error("1", ex.getMessage(), ex.getStackTrace());
-      }
-    } else if (call.method.equals("onKeyUp")) {
-      try {
-        ArrayList arguments = (ArrayList) call.arguments;
-        int numKeysDown = synth.keyUp((Integer) arguments.get(0));
-        result.success(numKeysDown);
-      } catch (Exception ex) {
-        result.error("1", ex.getMessage(), ex.getStackTrace());
-      }
-    } else {
-      result.notImplemented();
+    @Override
+    public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+        setupMethodChannel(binding.getBinaryMessenger());
     }
-  }
+
+    @Override
+    public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+        tearDownMethodChannel();
+    }
+
+    private void setupMethodChannel(BinaryMessenger messenger) {
+        channel = new MethodChannel(messenger, "com.sensie.plugin_sensie/swift_function");
+        channel.setMethodCallHandler(this);
+    }
+
+    private void tearDownMethodChannel() {
+        channel.setMethodCallHandler(null);
+        channel = null;
+    }
+
+    @Override
+    public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
+        switch (call.method) {
+            case "whipCounter":
+                handleWhipCounter(call, result);
+                break;
+            case "signalStrength":
+                handleSignalStrength(call, result);
+                break;
+            case "evaluateSensie":
+                handleEvaluateSensie(call, result);
+                break;
+            default:
+                result.notImplemented();
+                break;
+        }
+    }
+
+    private void handleWhipCounter(MethodCall call, Result result) {
+        Sensie s = new Sensie();
+        Map<String, Object> param = call.argument("param");
+        result.success(s.whipCounter(param));
+    }
+
+    private void handleSignalStrength(MethodCall call, Result result) {
+        Sensie s = new Sensie();
+        List<Object> sensies = call.argument("sensies");
+        result.success(s.signalStrength(sensies));
+    }
+
+    private void handleEvaluateSensie(MethodCall call, Result result) {
+        Sensie s = new Sensie();
+        Object sensie = call.argument("sensie");
+        List<Object> sensies = call.argument("sensies");
+        result.success(s.evaluateSensie(sensie, sensies));
+    }
 }
