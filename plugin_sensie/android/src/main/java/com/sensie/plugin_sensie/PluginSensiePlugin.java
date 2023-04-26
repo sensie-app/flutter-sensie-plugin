@@ -60,14 +60,14 @@ public class PluginSensiePlugin implements FlutterPlugin, MethodCallHandler {
 
     private void handleSignalStrength(MethodCall call, Result result) {
         Sensie s = new Sensie();
-        List<Object> sensies = call.argument("sensies");
+        List<Map<String, Object>> sensies = call.argument("sensies");
         result.success(s.signalStrength(sensies));
     }
 
     private void handleEvaluateSensie(MethodCall call, Result result) {
         Sensie s = new Sensie();
-        Object sensie = call.argument("sensie");
-        List<Object> sensies = call.argument("sensies");
+        Map<String, Object> sensie = call.argument("sensie");
+        List<Map<String, Object>> sensies = call.argument("sensies");
         result.success(s.evaluateSensie(sensie, sensies));
     }
 }
