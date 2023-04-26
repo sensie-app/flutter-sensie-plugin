@@ -5,23 +5,10 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        flatDir {
-            dirs 'libs'
-        }
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:7.1.2'
-    }
-}
-
-rootProject.allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        flatDir {
-            dirs 'libs'
-        }
     }
 }
 
@@ -38,4 +25,15 @@ android {
     defaultConfig {
         minSdkVersion 16
     }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+}
+
+dependencies {
+   implementation fileTree(include: ['*.jar'], dir: 'libs')
+   compileOnly files('libs/sensielibrary.aar')
 }
