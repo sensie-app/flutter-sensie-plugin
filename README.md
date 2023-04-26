@@ -7,7 +7,7 @@ In your project, open the pubspec.yaml file and add the plugin as a dependency u
 dependencies:
   flutter:
     sdk: flutter
-  plugin_sensie: 0.0.1
+  plugin_sensie: 0.0.2
 ```
 And Install the plugin: Run the following command in your terminal, in your project's root directory, to download and install the plugin:
 ```bash
